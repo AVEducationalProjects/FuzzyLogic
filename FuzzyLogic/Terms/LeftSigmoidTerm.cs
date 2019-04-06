@@ -22,7 +22,7 @@ namespace FuzzyLogic.Terms
 
         public double Width { get; private set; }
 
-        public double WeightCenter => Type.MinValue;
+        public double WeightCenter => Math.Max(Type.MinValue, Center-Width);
 
         public double CalcTruthDegree(double x) => 1.0 / (1.0 + Math.Exp((x - Center) / Width));
     }

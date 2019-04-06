@@ -1,0 +1,1 @@
+live-server bin/Debug/netcoreapp2.2/data

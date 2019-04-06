@@ -4,6 +4,10 @@ namespace FuzzyLogic.Statements
 {
     public class NotStatement : IStatement
     {
+        public NotStatement(IStatement statement)
+        {
+            Statement = statement;
+        }
 
         public IStatement Statement { get; private set; }
 
