@@ -1,0 +1,37 @@
+﻿@model FuzzyLogic.LinguisticType
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4>Создание лингвистической переменной</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Название</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MinValue" class="control-label">Минимум опорного множества</label>
+                <input asp-for="MinValue" class="form-control" />
+                <span asp-validation-for="MinValue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxValue" class="control-label">Максимум опорного множества</label>
+                <input asp-for="MaxValue" class="form-control" />
+                <span asp-validation-for="MaxValue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Создать" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

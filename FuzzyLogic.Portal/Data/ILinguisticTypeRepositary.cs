@@ -8,7 +8,7 @@ namespace FuzzyLogic.Portal.Data
     {
         Task<IList<LinguisticType>> List();
         Task Save(LinguisticType linguisticType);
-        Task<LinguisticType> Get(ObjectId objectId);
+        Task<LinguisticType> Get(ObjectId id);
         Task Delete(ObjectId id);
     }
 }

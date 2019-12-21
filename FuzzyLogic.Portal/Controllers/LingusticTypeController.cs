@@ -20,7 +20,8 @@ namespace FuzzyLogic.Portal.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View();
+            var result = await _lingusticTypeRepositary.List();
+            return View(result);
         }
 
         [HttpGet]
@@ -32,6 +33,7 @@ namespace FuzzyLogic.Portal.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(LinguisticType linguisticType)
         {
+            linguisticType.Id = ObjectId.GenerateNewId().ToString();
             await _lingusticTypeRepositary.Save(linguisticType);
             return RedirectToAction("Index");
         }
@@ -39,8 +41,8 @@ namespace FuzzyLogic.Portal.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            var linguistic = await _lingusticTypeRepositary.Get(new ObjectId(id));
-            return View();
+            var linguisticType = await _lingusticTypeRepositary.Get(new ObjectId(id));
+            return View(linguisticType);
         }
 
         [HttpPost]

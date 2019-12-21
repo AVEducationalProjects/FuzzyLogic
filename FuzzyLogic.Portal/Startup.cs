@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FuzzyLogic.Portal.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Bson.Serialization;
 
 namespace FuzzyLogic.Portal
 {
@@ -23,12 +25,15 @@ namespace FuzzyLogic.Portal
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ILinguisticTypeRepositary, LinguisticTypeMongoRepositary>();
             services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            SetupDatabaseMap();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -50,6 +55,15 @@ namespace FuzzyLogic.Portal
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=LingusticType}/{action=Index}/{id?}");
+            });
+        }
+
+        private static void SetupDatabaseMap()
+        {
+            BsonClassMap.RegisterClassMap<LinguisticType>(cm =>
+            {
+                cm.AutoMap();
+                cm.SetIdMember(cm.GetMemberMap(c => c.Id));
             });
         }
     }
