@@ -9,6 +9,11 @@ namespace FuzzyLogic
     {
         private IDictionary<string, ITerm> _terms;
 
+        public LinguisticType()
+        {
+            _terms = new Dictionary<string, ITerm>();
+        }
+
         public LinguisticType(string name, double minValue = 0, double maxValue = int.MaxValue)
         {
             Name = name;
@@ -17,6 +22,8 @@ namespace FuzzyLogic
 
             _terms = new Dictionary<string, ITerm>();
         }
+
+        public string Id { get; set; }
 
         public string Name { get; set; }
 
