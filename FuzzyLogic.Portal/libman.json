@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "destination": "wwwroot/lib/jquery",
+      "library": "jquery@3.4.1",
+      "provider": "cdnjs"
+    },
+    {
+      "destination": "wwwroot/lib/bootstrap",
+      "library": "twitter-bootstrap@4.3.1",
+      "provider": "cdnjs"
+    },
+    {
+      "destination": "wwwroot/lib/font-awesome",
+      "library": "font-awesome@5.11.2",
+      "provider": "cdnjs"
+    },
+    {
+      "destination": "wwwroot/lib/chartjs",
+      "library": "Chart.js@2.9.3",
+      "provider": "cdnjs"
+    }
+  ]
+}

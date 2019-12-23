@@ -26,13 +26,132 @@
                 <input asp-for="MaxValue" class="form-control" />
                 <span asp-validation-for="MaxValue" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Сохранить" class="btn btn-primary" />
-            </div>
+
         </form>
+    </div>
+    <div class="col-md-8">
+        <canvas width="400" height="200" id="chart"></canvas>
+    </div>
+    <div class="col-md-12">
+        <div id="terms" class="row"></div>
+        <button id="addTerm" class="btn btn-link">Добавить терм</button>
+    </div>
+    <div class="col-md-12">
+        <div class="form-group">
+            <input type="submit" value="Сохранить" class="btn btn-primary" />
+        </div>
     </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/lib/chartjs/Chart.js" type="text/javascript"></script>
+
+    <script>
+        function addTerm(term) {
+            var inserted = $(`<div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Название терма</label>
+                                                            <input type="text" class="form-control" name="term_name" value="${term.name}" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Центр</label>
+                                                            <input type="number" class="form-control" name="term_center" value="${term.center}"/>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Ширина</label>
+                                                            <input type="number" class="form-control" name="term_width" value="${term.width}" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <button name="deleteTerm" class="btn btn-link">Удалить</button>
+                                                        </div>
+                                                        <hr/></div>`);
+
+            inserted.find("button[name=deleteTerm]").click(() => {
+                inserted.remove();
+                updateDiagram();
+            });
+            inserted.find("input").change(updateDiagram);
+
+            $("#terms").append(inserted);
+            updateDiagram();
+        }
+
+        function getTermData() {
+            var result = [];
+            $("#terms").children().each((idx, element) => {
+                let name = $(element).find("input[name=term_name]").val();
+                let center = parseFloat($(element).find("input[name=term_center]").val());
+                let width = parseFloat($(element).find("input[name=term_width]").val());
+
+                result.push({ name: name, center: center, width: width });
+            });
+            return result;
+        }
+
+        function generateData(term, labels, type) {
+            var result = [];
+            $.each(labels, (idx, x) => {
+                if (type == "left") {
+                    result.push(1.0 / (1.0 + Math.exp((x - term.center) / term.width)));
+                } else if (type == "right") {
+                    result.push(1.0 - 1.0 / (1.0 + Math.exp((x - term.center) / term.width)));
+                } else {
+                    result.push(Math.exp(-0.5 * Math.pow((x - term.center) / term.width, 2)));
+                }
+            });
+            return result;
+        }
+
+        function getDataSet(termsData) {
+            const pointCount = 40;
+            let minValue = parseInt($("#MinValue").val());
+            let maxValue = parseInt($("#MaxValue").val());
+
+            let step = (maxValue - minValue) / pointCount;
+            var labels = [];
+            for (var label = minValue; label <= maxValue; label += step) {
+                labels.push(Math.round(label));
+            }
+
+            var datasets = [];
+            $.each(termsData, (idx, val) => {
+                var type = "center";
+                if (idx == 0)
+                    type = "left";
+                else if (idx == termsData.length - 1)
+                    type = "right";
+                datasets.push({
+                    label: val.name,
+                    borderColor: '#' + Math.floor(Math.random() * 16777215).toString(16),
+                    data: generateData(val, labels, type),
+                    fill: false
+                });
+            });
+
+            return {
+                labels: labels,
+                datasets: datasets
+            };
+        }
+
+        function updateDiagram() {
+            var termsData = getTermData();
+            var dataSet = getDataSet(termsData);
+            new Chart(document.getElementById("chart"), {
+                type: 'line',
+                data: dataSet,
+                options: {
+                    title: {
+                        display: false,
+                    }
+                }
+            });
+        }
+
+        $(() => {
+            $("#addTerm").click(() => addTerm({ name: "Новый терм", center: 0, width: 20 }));
+        });
+    </script>
 }
