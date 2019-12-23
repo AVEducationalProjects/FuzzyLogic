@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace FuzzyLogic
 {
@@ -30,6 +31,38 @@ namespace FuzzyLogic
         public double MinValue { get; set; }
 
         public double MaxValue { get; set; }
+
+        public string TermsDefinition
+        {
+            get
+            {
+                if (Terms == null)
+                    return "[]";
+                var array = Terms.Select(x => new { name = x.Name, center = x.Center, width = x.Width }).ToArray();
+                return JsonSerializer.Serialize(array);
+            }
+
+            set
+            {
+                var i = 0;
+                var root = JsonDocument.Parse(value).RootElement;
+                foreach (var termDef in root.EnumerateArray())
+                {
+                    var termName = termDef.GetProperty("name").GetString();
+                    var termCenter = (double)termDef.GetProperty("center").GetDouble();
+                    var termWidth = (double)termDef.GetProperty("width").GetDouble();
+
+                    if (i == 0)
+                        CreateTerm(termName, termCenter, termWidth, TermType.Left);
+                    else if (i == root.GetArrayLength() - 1)
+                        CreateTerm(termName, termCenter, termWidth, TermType.Right);
+                    else
+                        CreateTerm(termName, termCenter, termWidth);
+                    i++;
+                }
+            }
+
+        }
 
         public ITerm this[string index] => _terms[index];
 

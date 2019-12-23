@@ -8,6 +8,10 @@
 
         string Name { get; }
 
+        double Center {get;}
+
+        double Width {get;}
+
         double CalcTruthDegree(double x);
     }
 }

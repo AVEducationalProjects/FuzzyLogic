@@ -8,9 +8,10 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form id="edit" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="Id" type="hidden" />
+            <input asp-for="TermsDefinition" type="hidden" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label">Название</label>
                 <input asp-for="Name" class="form-control" />
@@ -38,7 +39,7 @@
     </div>
     <div class="col-md-12">
         <div class="form-group">
-            <input type="submit" value="Сохранить" class="btn btn-primary" />
+            <button id="submit" class="btn btn-primary">Сохранить</button>
         </div>
     </div>
 </div>
@@ -51,22 +52,22 @@
     <script>
         function addTerm(term) {
             var inserted = $(`<div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label class="control-label">Название терма</label>
-                                                            <input type="text" class="form-control" name="term_name" value="${term.name}" />
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label">Центр</label>
-                                                            <input type="number" class="form-control" name="term_center" value="${term.center}"/>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label">Ширина</label>
-                                                            <input type="number" class="form-control" name="term_width" value="${term.width}" />
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <button name="deleteTerm" class="btn btn-link">Удалить</button>
-                                                        </div>
-                                                        <hr/></div>`);
+                                                            <div class="form-group">
+                                                                <label class="control-label">Название терма</label>
+                                                                <input type="text" class="form-control" name="term_name" value="${term.name}" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label">Центр</label>
+                                                                <input type="number" class="form-control" name="term_center" value="${term.center}"/>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label">Ширина</label>
+                                                                <input type="number" class="form-control" name="term_width" value="${term.width}" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <button name="deleteTerm" class="btn btn-link">Удалить</button>
+                                                            </div>
+                                                            <hr/></div>`);
 
             inserted.find("button[name=deleteTerm]").click(() => {
                 inserted.remove();
@@ -151,7 +152,15 @@
         }
 
         $(() => {
+            var terms = JSON.parse($("#TermsDefinition").val());
+            $.each(terms, (idx, term) => addTerm(term));
+
             $("#addTerm").click(() => addTerm({ name: "Новый терм", center: 0, width: 20 }));
+            $("#submit").click(() => {
+                $("#TermsDefinition").val(JSON.stringify(getTermData()));
+                $("#edit").submit();
+            });
+
         });
     </script>
 }
