@@ -8,5 +8,6 @@
 
         public string LinguisticTypeCollection { get; set; }
 
+        public string RulesCollection { get;  set; }
     }
 }

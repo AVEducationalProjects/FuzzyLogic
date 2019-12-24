@@ -1,0 +1,28 @@
+﻿@model FuzzyLogic.Portal.Model.FuzzyRule
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4>Новое правило</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="RuleDefinition" class="control-label">Правило</label>
+                <input asp-for="RuleDefinition" class="form-control" />
+                <span asp-validation-for="RuleDefinition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Создать" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

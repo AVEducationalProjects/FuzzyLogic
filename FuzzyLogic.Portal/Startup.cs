@@ -26,6 +26,7 @@ namespace FuzzyLogic.Portal
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<ILinguisticTypeRepositary, LinguisticTypeMongoRepositary>();
+            services.AddScoped<IRuleRepositary, RuleMongoRepositary>();
             services.AddControllersWithViews();
         }
 
